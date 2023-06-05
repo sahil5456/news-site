@@ -1,14 +1,4 @@
 <?php include "header.php";
- ?>
-  <div id="admin-content">
-      <div class="container">
-          <div class="row">
-              <div class="col-md-12">
-                  <h1 class="adin-heading"> Update Category</h1>
-              </div>
-              <div class="col-md-offset-3 col-md-6">
-                  <form action="" method ="POST">
-                      <div class="form-group"><?php include "header.php";
 if($_SESSION["user_role"] == '0'){
   header("Location: {$hostname}/admin/post.php");
 }

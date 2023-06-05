@@ -1,6 +1,4 @@
-<?php include "header.php"; 
-
-?>
+<?php include "header.php"; ?>
   <div id="admin-content">
       <div class="container">
           <div class="row">

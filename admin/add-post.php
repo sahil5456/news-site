@@ -1,48 +1,51 @@
 <?php include "header.php"; ?>
   <div id="admin-content">
       <div class="container">
-         <div class="row">
-             <div class="col-md-12">
-                 <h1 class="admin-heading">Add New Post</h1>
-             </div>
+          <div class="row">
+              <div class="col-md-12">
+                  <h1 class="admin-heading">Add New Category</h1>
+              </div>
               <div class="col-md-offset-3 col-md-6">
-                  <!-- Form -->
-                  <form  action="save-post.php" method="POST" enctype="multipart/form-data">
+                  <!-- Form Start -->
+                  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" autocomplete="off">
                       <div class="form-group">
-                          <label for="post_title">Title</label>
-                          <input type="text" name="post_title" class="form-control" autocomplete="off" required>
+                          <label>Category Name</label>
+                          <input type="text" name="cat" class="form-control" placeholder="Category Name" required>
                       </div>
-                      <div class="form-group">
-                          <label for="exampleInputPassword1"> Description</label>
-                          <textarea name="postdesc" class="form-control" rows="5"  required></textarea>
-                      </div>
-                      <div class="form-group">
-                          <label for="exampleInputPassword1">Category</label>
-                          <select name="category" class="form-control">
-                              <option disabled selected> Select Category</option>
-                              <?php
-                                include "config.php";
-                                $sql = "SELECT * FROM category";
-
-                                $result = mysqli_query($conn, $sql) or die("Query Failed.");
-
-                                if(mysqli_num_rows($result) > 0){
-                                  while($row = mysqli_fetch_assoc($result)){
-                                    echo "<option value='{$row['category_id']}'>{$row['category_name']}</option>";
-                                  }
-                                }
-                              ?>
-                          </select>
-                      </div>
-                      <div class="form-group">
-                          <label for="exampleInputPassword1">Post image</label>
-                          <input type="file" name="fileToUpload" required>
-                      </div>
-                      <input type="submit" name="submit" class="btn btn-primary" value="Save" required />
+                      <input type="submit" name="save" class="btn btn-primary" value="Save" required />
                   </form>
-                  <!--/Form -->
+                  <!-- /Form End -->
+                  <?php
+                    if( isset($_POST['save']) ){
+                        // database configuration
+                        include 'config.php';
+                        $category =mysqli_real_escape_string($conn, $_POST['cat']);
+                        /* query for check input value exists in category table or not*/
+                        $sql = "SELECT category_name FROM category where category_name='{$category}'";
+                        $result = mysqli_query($conn, $sql);
+                        if (mysqli_num_rows($result)> 0) {
+                            // if input value exists
+                            echo "<p style = 'color:red;text-align:center;margin: 10px 0';> Category already exists.</p>";
+                        }else{
+                            // if input value not exists
+                            /* query for insert record in category name */
+                            $sql = "INSERT INTO category (category_name)
+                                    VALUES ('{$category}')";
+
+                            if (mysqli_query($conn, $sql)){
+                                header("location: {$hostname}/admin/category.php");
+                            }else{
+                            echo "<p style = 'color:red;text-align:center;margin: 10px 0';>Query Failed.</p>";
+                            }
+                        }
+                    }
+                    mysqli_close($conn);
+                ?>
               </div>
           </div>
       </div>
   </div>
-<?php include "footer.php"; ?>
+  
+<?php
+    include "footer.php";
+  ?>
